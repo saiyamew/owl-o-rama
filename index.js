@@ -3,10 +3,15 @@ const animal = require('./animal.js')
 exports.owlORama = async (req, res) => {
     switch (req.method) {
     case 'GET':
-      let owl = await animal.getAnimal('petting-zoo-data-test','animal.json','./animal.json','owl');
+      console.log('Starting GET')
+      try{
+      let owl = await animal.getAnimal('petting-zoo-data-test','animal.json','/tmp/animal.json','goose');
       let message = {"message": "Brought to you by Joe's Owl-O-Rama", "url": owl};
       res.type('json');
       res.status(200).send(message);
+      } catch (error) {
+        res.status(400).send(error)
+      }
       break;
     //Do I really need PUT?
     case 'PUT':
@@ -14,11 +19,20 @@ exports.owlORama = async (req, res) => {
       break;
     //I think the update should go in POST
     case 'POST':
-      let newOwl = await animal.postOwl('petting-zoo-data-test','animal.json','./animal.json','goose','http://fuck.biz/ass')//TEMPORARY AS I FIGURE OUT HOW TO USE THE DATA FROM THE POST
-      res.status(newOwl.status).send(newOwl.message);
+      console.log('Starting POST')
+      let url = req.body.url;
+      console.log('URL provided = ' + url);      
+      let newOwl;
+      try{
+      newOwl = await animal.postAnimal('petting-zoo-data-test','animal.json','/tmp/animal.json','owl',url)//TEMPORARY AS I FIGURE OUT HOW TO USE THE DATA FROM THE POST
+      res.status(newOwl.status).send(newOwl.message + ". Thank you for choosing Joe's Owl-O-Rama");
+      } catch (error) {
+        console.log('Error: ' + error)
+        res.end('Error: ' + newOwl.toString())
+      }
       break;
     default:
-      res.status(405).send({error: 'Something blew up!'});
+      res.status(405).send('Something fucked up');
       break;
   }
 };
