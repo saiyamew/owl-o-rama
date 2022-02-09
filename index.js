@@ -5,8 +5,8 @@ exports.owlORama = async (req, res) => {
     case 'GET':
       console.log('Starting GET')
       try{
-      let owl = await animal.getAnimal('petting-zoo-data-test','animal.json','/tmp/animal.json','goose');
-      let message = {"message": "Brought to you by Joe's Owl-O-Rama", "url": owl};
+      let owl = await animal.getAnimal('petting-zoo-data-test','animal.json','/tmp/animal.json','owl');
+      let message = {"message": "Brought to you by Joe's Owl-O-Rama", "url": owl.message};
       res.type('json');
       res.status(200).send(message);
       } catch (error) {
@@ -25,7 +25,7 @@ exports.owlORama = async (req, res) => {
       let newOwl;
       try{
       newOwl = await animal.postAnimal('petting-zoo-data-test','animal.json','/tmp/animal.json','owl',url)//TEMPORARY AS I FIGURE OUT HOW TO USE THE DATA FROM THE POST
-      res.status(newOwl.status).send(newOwl.message + ". Thank you for choosing Joe's Owl-O-Rama");
+      res.status(newOwl.status).send(newOwl.message);
       } catch (error) {
         console.log('Error: ' + error)
         res.end('Error: ' + newOwl.toString())
